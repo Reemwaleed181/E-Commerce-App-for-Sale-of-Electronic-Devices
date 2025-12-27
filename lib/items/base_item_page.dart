@@ -4,6 +4,7 @@ import 'package:task1/homepage.dart';
 import 'package:task1/profile.dart';
 import 'package:provider/provider.dart';
 import 'package:task1/components/app_drawer.dart';
+import 'package:task1/components/custom_bottom_nav.dart';
 
 class BaseItemPage extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -18,7 +19,6 @@ class BaseItemPage extends StatefulWidget {
 class _BaseItemPageState extends State<BaseItemPage> {
   int _selectedIndex = 0;
   int _quantity = 1;
-  bool _isFavorite = false;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -61,25 +61,20 @@ class _BaseItemPageState extends State<BaseItemPage> {
     }
   }
 
-  void _toggleFavorite() {
-    setState(() {
-      _isFavorite = !_isFavorite;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.shop_two_outlined, color: Color(0xFFFF6B00)),
-            Text(" Quick ", style: TextStyle(color: Colors.black)),
-            Text("Cart", style: TextStyle(color: Color(0xFFFF6B00))),
-          ],
-        ),
+        automaticallyImplyLeading: true, // Show back arrow automatically
+        actions: [
+          Builder(
+            builder:
+                (context) => IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed: () => Scaffold.of(context).openEndDrawer(),
+                ),
+          ),
+        ],
       ),
       endDrawer: AppDrawer(userName: "REEM", userEmail: "REEM1819@gmail.com"),
       body: SingleChildScrollView(
@@ -107,15 +102,22 @@ class _BaseItemPageState extends State<BaseItemPage> {
                 children: [
                   Text(
                     widget.data['title'],
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 10),
                   Text(
                     widget.data['subtitle'],
-                    style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey[400]
+                              : Colors.grey[600],
+                    ),
                   ),
                   const SizedBox(height: 20),
                   Row(
@@ -138,9 +140,10 @@ class _BaseItemPageState extends State<BaseItemPage> {
                           ),
                           Text(
                             _quantity.toString(),
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                           IconButton(
@@ -153,14 +156,24 @@ class _BaseItemPageState extends State<BaseItemPage> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  const Text(
+                  Text(
                     "Description",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   ),
                   const SizedBox(height: 10),
                   Text(
                     widget.data['space'] ?? 'No description available',
-                    style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey[400]
+                              : Colors.grey[600],
+                    ),
                   ),
                   const SizedBox(height: 30),
                   SizedBox(
@@ -207,33 +220,10 @@ class _BaseItemPageState extends State<BaseItemPage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        iconSize: 25,
-        selectedItemColor: Color(0xFFFF6B00),
-        unselectedItemColor: Colors.grey,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        elevation: 8,
-        backgroundColor: Colors.white,
-        type: BottomNavigationBarType.fixed,
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_bag_outlined),
-            activeIcon: Icon(Icons.shopping_bag),
-            label: "Cart",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: "Profile",
-          ),
-        ],
+      bottomNavigationBar: CustomBottomNav(
+        selectedIndex: 0, // Default to home
+        userName: "REEM",
+        userEmail: "REEM1819@gmail.com",
       ),
     );
   }

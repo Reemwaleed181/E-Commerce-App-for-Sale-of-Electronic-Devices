@@ -7,6 +7,8 @@ import '../categories/laptop.dart';
 import '../homepage.dart';
 import '../cart.dart';
 import '../profile.dart';
+import '../theme_controller.dart';
+import 'package:provider/provider.dart';
 
 class AppDrawer extends StatelessWidget {
   final String userName;
@@ -22,12 +24,13 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeController = Provider.of<ThemeController>(context);
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            decoration: const BoxDecoration(color: Color(0xFFFF6B00)),
+            decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary),
             accountName: Text(
               userName,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -46,8 +49,14 @@ class AppDrawer extends StatelessWidget {
               ),
             ),
           ),
+          SwitchListTile(
+            secondary: Icon(Icons.brightness_6, color: Theme.of(context).colorScheme.primary),
+            title: const Text('Dark Mode'),
+            value: themeController.themeMode == ThemeMode.dark,
+            onChanged: (val) => themeController.toggleDark(val),
+          ),
           ListTile(
-            leading: const Icon(Icons.home, color: Color(0xFFFF6B00)),
+            leading: Icon(Icons.home, color: Theme.of(context).colorScheme.primary),
             title: const Text('Home'),
             onTap: () {
               Navigator.pop(context);
@@ -59,7 +68,7 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.headphones, color: Color(0xFFFF6B00)),
+            leading: Icon(Icons.headphones, color: Theme.of(context).colorScheme.primary),
             title: const Text('Headphones'),
             onTap: () {
               Navigator.pop(context);
@@ -70,7 +79,7 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.laptop, color: Color(0xFFFF6B00)),
+            leading: Icon(Icons.laptop, color: Theme.of(context).colorScheme.primary),
             title: const Text('Laptops'),
             onTap: () {
               Navigator.pop(context);
@@ -81,7 +90,7 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.phone_android, color: Color(0xFFFF6B00)),
+            leading: Icon(Icons.phone_android, color: Theme.of(context).colorScheme.primary),
             title: const Text('Mobiles'),
             onTap: () {
               Navigator.pop(context);
@@ -92,7 +101,7 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.watch, color: Color(0xFFFF6B00)),
+            leading: Icon(Icons.watch, color: Theme.of(context).colorScheme.primary),
             title: const Text('Watches'),
             onTap: () {
               Navigator.pop(context);
@@ -103,7 +112,7 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.card_giftcard, color: Color(0xFFFF6B00)),
+            leading: Icon(Icons.card_giftcard, color: Theme.of(context).colorScheme.primary),
             title: const Text('Gifts'),
             onTap: () {
               Navigator.pop(context);
@@ -115,7 +124,7 @@ class AppDrawer extends StatelessWidget {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.shopping_cart, color: Color(0xFFFF6B00)),
+            leading: Icon(Icons.shopping_cart, color: Theme.of(context).colorScheme.primary),
             title: const Text('Cart'),
             onTap: () {
               Navigator.pop(context);
@@ -126,7 +135,7 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.person, color: Color(0xFFFF6B00)),
+            leading: Icon(Icons.person, color: Theme.of(context).colorScheme.primary),
             title: const Text('Profile'),
             onTap: () {
               Navigator.pop(context);

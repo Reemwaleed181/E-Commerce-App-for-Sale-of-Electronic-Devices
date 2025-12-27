@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../components/app_drawer.dart';
+import '../components/custom_bottom_nav.dart';
+import '../profile.dart';
 
 class BaseCategoryPage extends StatefulWidget {
   final String title;
@@ -59,18 +61,15 @@ class _BaseCategoryPageState extends State<BaseCategoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.shop_two_outlined, color: Color(0xFFFF6B00)),
-            const Text(" Quick ", style: TextStyle(color: Colors.black)),
-            Text(
-              widget.title,
-              style: const TextStyle(color: Color(0xFFFF6B00)),
+        automaticallyImplyLeading: true, // Show back arrow automatically
+        actions: [
+          Builder(
+            builder: (context) => IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () => Scaffold.of(context).openEndDrawer(),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       endDrawer: AppDrawer(
         userName: widget.userName,
@@ -81,7 +80,9 @@ class _BaseCategoryPageState extends State<BaseCategoryPage> {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: Colors.grey[100],
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.grey[800]
+                  : Colors.grey[100],
               borderRadius: BorderRadius.circular(15),
             ),
             child: TextFormField(
@@ -98,9 +99,13 @@ class _BaseCategoryPageState extends State<BaseCategoryPage> {
             ),
           ),
           const SizedBox(height: 15),
-          const Text(
+          Text(
             "Best Selling",
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
           ),
           const SizedBox(height: 15),
           GridView.builder(
@@ -111,7 +116,7 @@ class _BaseCategoryPageState extends State<BaseCategoryPage> {
               crossAxisCount: 2,
               mainAxisSpacing: 15,
               crossAxisSpacing: 15,
-              mainAxisExtent: 320,
+              mainAxisExtent: 300,
             ),
             itemBuilder: (context, i) {
               return GestureDetector(
@@ -125,60 +130,97 @@ class _BaseCategoryPageState extends State<BaseCategoryPage> {
                     ),
                   );
                 },
-                child: Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.black.withOpacity(0.3)
+                            : Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        width: double.infinity,
-                        height: 150,
-                        color: Colors.grey[200],
-                        child: Image.asset(
-                          filteredItems[i]['image'],
-                          fit: BoxFit.fill,
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).brightness == Brightness.dark
+                                ? Colors.grey[800]
+                                : Colors.grey[100],
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(16),
+                              topRight: Radius.circular(16),
+                            ),
+                          ),
+                          width: double.infinity,
+                          child: Image.asset(
+                            filteredItems[i]['image'],
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(12),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               filteredItems[i]['title'],
-                              style: const TextStyle(
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
                                 fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                                color: Theme.of(context).colorScheme.onSurface,
                               ),
                             ),
-                            const SizedBox(height: 5),
-                            Text(
-                              filteredItems[i]['subtitle'] ?? '',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
-                              ),
-                            ),
+                            const SizedBox(height: 4),
                             Text(
                               filteredItems[i]['subtitle2'] ?? '',
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.grey[400]
+                                    : Colors.grey[600],
                               ),
                             ),
-                            const SizedBox(height: 10),
-                            Text(
-                              filteredItems[i]['price'] ?? '',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.orange,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  filteredItems[i]['price'] ?? '',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: Theme.of(context).colorScheme.primary,
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primary
+                                        .withOpacity(0.1),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.add_shopping_cart,
+                                    size: 16,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -190,6 +232,11 @@ class _BaseCategoryPageState extends State<BaseCategoryPage> {
             },
           ),
         ],
+      ),
+      bottomNavigationBar: CustomBottomNav(
+        selectedIndex: 0,
+        userName: widget.userName,
+        userEmail: widget.userEmail,
       ),
     );
   }
